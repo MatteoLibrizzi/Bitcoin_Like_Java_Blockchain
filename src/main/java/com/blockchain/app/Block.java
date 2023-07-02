@@ -1,10 +1,9 @@
-import java.io.ByteArrayOutputStream;
+package com.blockchain.app;
+
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class Block implements Serializable {
 
@@ -13,14 +12,11 @@ public class Block implements Serializable {
 	private int nonce;
 	private byte[] merkleRoot;
 
-	public Block(byte[] merkleRoot, byte[] hashPrevious) throws IOException,
-			NoSuchAlgorithmException {// builder
+	public Block(byte[] merkleRoot, byte[] hashPrevious) {// builder
 		this.setTimeStamp();
 		this.hashPrevious = hashPrevious;
 		this.nonce = 0;
 		this.merkleRoot = merkleRoot;
-
-		this.changeNonceUntilBlockIsValid();
 	}
 
 	public Block(Block b) {// copy builder
@@ -28,6 +24,16 @@ public class Block implements Serializable {
 		hashPrevious = b.hashPrevious;
 		nonce = b.nonce;
 		merkleRoot = b.merkleRoot;
+	}
+
+	@Override
+	public int hashCode() {
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "Timestamp: " + Arrays.toString(timeStamp) + "\nNonce: " + Integer.toString(nonce) + "\n";
 	}
 
 	@Override
@@ -49,13 +55,7 @@ public class Block implements Serializable {
 		return this.hashPrevious;
 	}
 
-	private void changeNonceUntilBlockIsValid() throws NoSuchAlgorithmException, IOException {
-		while (!isBlockValid(this, this.nonce)) {
-			this.changeNonce();
-		}
-	}
-
-	private void changeNonce() throws IOException, NoSuchAlgorithmException {
+	public void changeNonce() {
 		this.nonce++;
 	}
 
@@ -73,41 +73,26 @@ public class Block implements Serializable {
 		this.timeStamp[6] = LocalDateTime.now().getNano();
 	}
 
-	public byte[] getBytes() throws IOException {// returns byte[] of the block considering all the attributes (caused a
-													// lot of trouble)
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream out = new ObjectOutputStream(bos);
-		out.writeObject(this);// writes in the object output stream this
-		out.flush();// transfers the date from the obj out stream to byte[] out stream, transforming
-					// its type in the process
-		return bos.toByteArray();
+	public String getGenerationTimeString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < this.timeStamp.length; i++) {
+			sb.append(this.timeStamp[i]);
+		}
+		return sb.toString();
 	}
 
-	public void printTime() {// prints time the block was created (debug use)
+	public void printGenerationTime() {
 		for (int i = 0; i < this.timeStamp.length; i++) {
 			System.out.println(this.timeStamp[i]);
 		}
 	}
 
-	public static byte[] findBlockHash(Block block) throws IOException, NoSuchAlgorithmException {
-		byte[] b = block.getBytes();
-
-		return Utils.hash(b);
-	}
-
-	public static byte[] byteGen() {// GENERATES random bytes
-		SecureRandom random = new SecureRandom();
-		byte[] salt = new byte[2];
-		random.nextBytes(salt);
-		return salt;
-	}
-
-	private static boolean isBlockValid(Block block, int difficulty) throws IOException {
-		byte[] h = block.getPrevHash();
+	static boolean isBlockValid(Block block, int difficulty) throws IOException {
+		byte[] h = Utils.hashBlock(block);
 		byte valueToMatch = (byte) 0;
 
 		for (int i = 0; i < difficulty; i++) {
-			if(Byte.compare(h[0], valueToMatch) != 0) {
+			if(Byte.compare(h[i], valueToMatch) != 0) {
 				return false;
 			}
 		}
