@@ -116,5 +116,11 @@ public class Miner extends Thread implements BlockAdditionListener{
 	@Override
 	public void onBlockAdded(Chain c) {
 		this.calculatingBlock = false;
+		Chain copy = this.chain;
+		try {
+			this.chain = this.getBestChain();
+		} catch (IOException e) {
+			this.chain = copy;
+		}
 	}
 }
