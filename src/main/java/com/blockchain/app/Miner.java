@@ -7,13 +7,12 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class Miner extends Thread implements BlockAdditionListener{
-	// TODO should create a way for miners to communicate their existence to the others
 	private Chain chain;
-	private byte[] data;
+	private String data;
 	private LinkedList<Miner> connectedMiners;
 	private boolean calculatingBlock;
 
-	public Miner(Chain chain, byte[] data) {
+	public Miner(Chain chain, String data) {
 		this.chain = chain;
 		this.connectedMiners = new LinkedList<>();
 		this.data = data;
@@ -83,10 +82,9 @@ public class Miner extends Thread implements BlockAdditionListener{
 			while (true) {
 				this.chain = this.getBestChain();
 
-				byte[] hdata = hash(this.data);
 				Block lastBlock = this.chain.getLastBlock();
 				byte[] lasth = Utils.hashBlock(lastBlock);
-				Block newBlock = new Block(hdata, lasth);
+				Block newBlock = new Block(this.data, lasth);
 				this.calculatingBlock = true;
 
 				while (this.calculatingBlock) {

@@ -17,4 +17,5 @@ feel free to specify in App.java the number of miners you want in the network an
 
 
 The miners communicate with each other to start working on the longest chain they find as soon as a miner in their network finds a block. The news of the new block spreads very quickly because each miner that receives the message will send it to it neighbors.
-The numbers printed represent the nonces of the blocks in the chain. Each miner adds a new one on top of the existing ones.
+Its important to note that each miner maintains its own copy of the chain, so that when a new block is added, the network is forced to spread the message.
+The data printed represents the version of the chain (the blocks it contains) as each miner adds its new block.

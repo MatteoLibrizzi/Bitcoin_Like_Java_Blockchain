@@ -10,20 +10,20 @@ public class Block implements Serializable {
 	public int[] timeStamp = new int[7];
 	private byte[] hashPrevious;
 	private int nonce;
-	private byte[] merkleRoot;
+	private String data;
 
-	public Block(byte[] merkleRoot, byte[] hashPrevious) {// builder
+	public Block(String data, byte[] hashPrevious) {// builder
 		this.setTimeStamp();
 		this.hashPrevious = hashPrevious;
 		this.nonce = 0;
-		this.merkleRoot = merkleRoot;
+		this.data = data;
 	}
 
 	public Block(Block b) {// copy builder
 		timeStamp = b.timeStamp;
 		hashPrevious = b.hashPrevious;
 		nonce = b.nonce;
-		merkleRoot = b.merkleRoot;
+		data = b.data;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class Block implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Timestamp: " + Arrays.toString(timeStamp) + "\nNonce: " + Integer.toString(nonce) + "\n";
+		return "  Block:\n    Data: " + this.data +"\n    Timestamp: " + Arrays.toString(timeStamp) + "\n    Nonce: " + Integer.toString(nonce) + "\n";
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class Block implements Serializable {
 		return timeStamp == b.timeStamp &&
 				hashPrevious == b.hashPrevious &&
 				nonce == b.nonce &&
-				merkleRoot == b.merkleRoot;
+				data == b.data;
 	}
 
 	public byte[] getPrevHash() {

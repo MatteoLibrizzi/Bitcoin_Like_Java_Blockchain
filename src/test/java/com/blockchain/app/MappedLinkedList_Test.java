@@ -32,8 +32,6 @@ public class MappedLinkedList_Test {
 
         m.insert(12);
 
-        System.out.println(m.searchInList(0));
-
         assertTrue(!m.searchInList(0).equals(null));
     }
 }

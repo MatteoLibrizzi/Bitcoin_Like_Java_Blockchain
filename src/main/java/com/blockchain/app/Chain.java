@@ -27,11 +27,14 @@ public class Chain {
 		Block block;
 		StringBuilder sb = new StringBuilder();
 
+		sb.append("Chain:\n");
+
 		for (int i = 0; i < this.blockList.size(); i++) {
 			block = this.blockList.get(i);
 
-			sb.append(block.getNonce() + " ");
+			sb.append(block.toString());
 		}
+		sb.append("\n");
 		return sb.toString();
 	}
 
@@ -42,9 +45,9 @@ public class Chain {
 	private void addFirstBlock() throws IOException,
 			NoSuchAlgorithmException {
 		byte[] previousHashPlaceholder = new byte[2];
-		byte[] merkelRootPlaceholder = new byte[2];
+		String firstBlockDummyData = "First Block dummy data";
 
-		this.firstBlock = new Block(merkelRootPlaceholder, previousHashPlaceholder);
+		this.firstBlock = new Block(firstBlockDummyData, previousHashPlaceholder);
 		while(!Block.isBlockValid(firstBlock, this.difficulty)) {
 			this.firstBlock.changeNonce();
 		}

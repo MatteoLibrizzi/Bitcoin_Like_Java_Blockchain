@@ -1,21 +1,15 @@
 package com.blockchain.app;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
 
-/**
- * Hello world!
- *
- */
 public class App
 {
     public static void main( String[] args ) throws InterruptedException, IOException, NoSuchAlgorithmException
     {
-
+        Random rand = new Random();
         int difficulty = 3;
         int numberOfMiners = 10;
 		Chain originalChain = new Chain(difficulty);
@@ -23,7 +17,8 @@ public class App
         LinkedList<Miner> miners = new LinkedList<>();
 
         for (int i = 0; i < numberOfMiners; i++) {
-            Miner m = new Miner(new Chain(originalChain), Utils.generateRandomByteArray(2));
+            Integer randomInt = rand.nextInt();
+            Miner m = new Miner(new Chain(originalChain), "RandomData_" + randomInt.toString());
             miners.add(m);
         }
 
